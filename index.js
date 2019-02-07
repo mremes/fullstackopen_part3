@@ -23,10 +23,16 @@ let persons = [
         }
 ]
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (_, res) => {
     res.json(persons)
 })
 
+app.get('/info', (_, res) => {
+    res.send(`
+    Puhelinluettelossa on ${persons.length} henkilön tiedot.<br>
+    ${new Date()}
+    `)
+})
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Running server on port ${PORT}`)
