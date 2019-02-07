@@ -1,8 +1,16 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
 
 const app = express()
+
 app.use(bodyParser.json())
+
+morgan.token('body', (req, _) => {
+    if (req.method == 'POST') return JSON.stringify(req.body)
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
     {
@@ -62,7 +70,7 @@ const response400 = (res, error) => res.status(400).json({ error })
 const random = () => Math.floor(Math.random() * 1611623773)
 
 app.post('/api/persons', (req, res) => {
-    const newPerson = req.body
+    const newPerson = Object.assign({}, req.body)
     const error = (msg) => response400(res, msg)
 
     if (!newPerson.name)
