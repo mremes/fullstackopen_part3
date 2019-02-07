@@ -1,38 +1,39 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
 const app = express()
+app.use(bodyParser.json())
 
 let persons = [
-        {
-            "name": "Arto Hellas",
-            "id": 1
-        },
-        {
-            "name": "Martti Tienari",
-            "phone": "040-123456",
-            "id": 2
-        },
-        {
-            "name": "Arto Järvinen",
-            "phone": "040-123456",
-            "id": 3
-        },
-        {
-            "name": "Lea Kutvonen",
-            "phone": "040-123456",
-            "id": 4
-        }
+    {
+        "name": "Arto Hellas",
+        "id": 1
+    },
+    {
+        "name": "Martti Tienari",
+        "phone": "040-123456",
+        "id": 2
+    },
+    {
+        "name": "Arto Järvinen",
+        "phone": "040-123456",
+        "id": 3
+    },
+    {
+        "name": "Lea Kutvonen",
+        "phone": "040-123456",
+        "id": 4
+    }
 ]
 
-app.get('/api/persons', (_, res) => {
-    res.json(persons)
-})
+app.get('/api/persons', (_, res) => res.json(persons))
 
-app.get('/info', (_, res) => {
+app.get('/info', (_, res) =>
     res.send(`
     Puhelinluettelossa on ${persons.length} henkilön tiedot.<br>
     ${new Date()}
     `)
-})
+)
 
 
 const get_person_with_raw_id = (raw_id) => {
@@ -56,6 +57,25 @@ app.delete('/api/persons/:id', (req, res) => {
 
     res.status(404).end()
 })
+
+const response400 = (res, error) => res.status(400).json({ error })
+const random = () => Math.floor(Math.random() * 1611623773)
+
+app.post('/api/persons', (req, res) => {
+    const newPerson = req.body
+    const error = (msg) => response400(res, msg)
+
+    if (!newPerson.name)
+        return error('name is missing')
+    else if (!newPerson.phone)
+        return error('phone is missing')
+    else if (persons.find(e => e.name === newPerson.name))
+        return error('name must be unique')
+
+    newPerson.id = random()
+    persons = persons.concat(newPerson)
+    res.status(200).end()
+});
 
 const PORT = 3001
 app.listen(PORT, () => {
