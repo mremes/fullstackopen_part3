@@ -34,10 +34,26 @@ app.get('/info', (_, res) => {
     `)
 })
 
+
+const get_person_with_raw_id = (raw_id) => {
+    let id = Number(raw_id)
+    return persons.find(e => e.id === id)
+}
+
 app.get('/api/persons/:id', (req, res) => {
-    let id = Number(req.params.id)
-    let element = persons.find(e => e.id === id)
+    let element = get_person_with_raw_id(req.params.id)
     if (element) return res.json(element)
+    res.status(404).end()
+})
+
+app.delete('/api/persons/:id', (req, res) => {
+    let element = get_person_with_raw_id(req.params.id)
+
+    if (element) {
+        persons = persons.filter(e => e.id !== element.id)
+        res.status(200).end()
+    }
+
     res.status(404).end()
 })
 
