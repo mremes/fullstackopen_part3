@@ -1,0 +1,27 @@
+{
+  "name": "phonebook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"ERROR: no tests configured\" && exit 1",
+    "start": "node index.js",
+    "watch": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mremes/fullstackopen_part3.git"
+  },
+  "author": "Matti Remes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mremes/fullstackopen_part3/issues"
+  },
+  "homepage": "https://github.com/mremes/fullstackopen_part3#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
