@@ -1,10 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
 
+app.use(cors())
 app.use(bodyParser.json())
+app.use(express.static('build'))
 
 morgan.token('body', (req, _) => {
     if (req.method == 'POST') return JSON.stringify(req.body)
@@ -43,24 +46,20 @@ app.get('/info', (_, res) =>
     `)
 )
 
-
-const get_person_with_raw_id = (raw_id) => {
-    let id = Number(raw_id)
-    return persons.find(e => e.id === id)
-}
+const get_person_with_raw_id = (raw_id) => persons.find(e => e.id === Number(raw_id))
 
 app.get('/api/persons/:id', (req, res) => {
-    let element = get_person_with_raw_id(req.params.id)
+    const element = get_person_with_raw_id(req.params.id)
     if (element) return res.json(element)
     res.status(404).end()
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    let element = get_person_with_raw_id(req.params.id)
+    const element = get_person_with_raw_id(req.params.id)
 
     if (element) {
         persons = persons.filter(e => e.id !== element.id)
-        res.status(200).end()
+        return res.status(200).end()
     }
 
     res.status(404).end()
