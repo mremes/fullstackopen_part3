@@ -65,7 +65,7 @@ app.post('/api/persons', (req, res, next) => {
     const newPerson = new Person({ ...person, id: random() })
     newPerson.save()
       .then(() => {
-        return res.status(200).end()
+        return res.json(newPerson).status(200).end()
       }).catch(error => {
         next(error)
       })
